@@ -1,0 +1,21 @@
+@import "tailwindcss";
+@import "@appwrite.io/pink";
+@import "@appwrite.io/pink-icons";
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  overflow-x: hidden;
+}
+
+body {
+  background: hsl(var(--color-neutral-50));
+}
+
+.dark body {
+  background: hsl(var(--color-neutral-900));
+}
+
