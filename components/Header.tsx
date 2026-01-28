@@ -5,17 +5,18 @@ import { ShoppingCart, User, LogOut } from 'lucide-react';
 import { useCartStore } from '@/store/useCartStore';
 import { useAuthStore } from '@/store/useAuthStore';
 import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Header() {
+  const [cartCount, setCartCount] = useState(0);
   const totalItems = useCartStore((state) => state.totalItems());
   const { isAuthenticated, user, logout } = useAuthStore();
   const router = useRouter();
 
-  // In Header.tsx, add this temporarily to debug
-useEffect(() => {
-    console.log('Header - Auth State:', { isAuthenticated, hasUser: !!user });
-  }, [isAuthenticated, user]);
+  // Update cart count only on client
+  useEffect(() => {
+    setCartCount(totalItems);
+  }, [totalItems]);
 
   const handleLogout = async () => {
     await logout();
@@ -61,9 +62,9 @@ useEffect(() => {
               className="relative p-2 hover:bg-lime-50 rounded-lg transition group"
             >
               <ShoppingCart className="w-6 h-6 text-gray-700 group-hover:text-lime-600 transition" />
-              {totalItems > 0 && (
+              {cartCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-lime-500 text-white text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full">
-                  {totalItems}
+                  {cartCount}
                 </span>
               )}
             </Link>
@@ -74,7 +75,7 @@ useEffect(() => {
                 <Link 
                   href="/profile"
                   className="p-2 hover:bg-lime-50 rounded-lg transition group"
-                  title={user?.name || user?.email}
+                  title={user?.name || user?.email || 'Profile'}
                 >
                   <User className="w-6 h-6 text-gray-700 group-hover:text-lime-600 transition" />
                 </Link>

@@ -13,14 +13,13 @@ export default function CartPage() {
   const { isAuthenticated } = useAuthStore();
   const router = useRouter();
 
-  const handleCheckout = () => {
+const handleCheckout = () => {
     if (!isAuthenticated) {
-      router.push('/login?redirect=/cart');
+      router.push('/login?redirect=/checkout');
       return;
     }
     
-    // TODO: Implement checkout
-    alert('Checkout coming soon!');
+    router.push('/checkout');
   };
 
   if (items.length === 0) {

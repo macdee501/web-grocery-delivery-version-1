@@ -1,7 +1,7 @@
 import ProductGrid from '@/components/ProductGrid'
 import { getProducts } from '@/lib/getProducts'
 
-export default async function Page() {
+export default async function ShopPage() {
   const products = await getProducts();
 
   return (
@@ -13,7 +13,7 @@ export default async function Page() {
           <p className="text-gray-600">Fresh, delicious, and delivered to your door</p>
         </div>
 
-        {/* Products Grid - Client Component */}
+        {/* Products Grid */}
         <ProductGrid products={products} />
       </div>
     </div>
