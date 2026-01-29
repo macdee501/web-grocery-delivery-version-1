@@ -162,6 +162,8 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const initializePaymentRef = useRef(false);
+  const checkoutCompletedRef = useRef(false);
+
   
   const [deliveryAddress, setDeliveryAddress] = useState({
     street: '',
@@ -171,7 +173,7 @@ export default function CheckoutPage() {
     phone: '',
   });
 
-  const deliveryFee = 50.00;
+  const deliveryFee = 1.00;
   const subtotal = totalPrice();
   const total = subtotal + deliveryFee;
 
@@ -195,11 +197,12 @@ export default function CheckoutPage() {
 
   // Redirect if cart is empty
   useEffect(() => {
-    if (items.length === 0) {
-      console.log('🛒 Cart is empty, redirecting');
+    if (items.length === 0 && !checkoutCompletedRef.current) {
+      console.log('🛒 Cart empty (not checkout success), redirecting');
       router.push('/cart');
     }
   }, [items, router]);
+  
 
   // Initialize payment intent
   useEffect(() => {
@@ -258,8 +261,10 @@ export default function CheckoutPage() {
 
   const handlePaymentSuccess = (orderId: string) => {
     console.log('🎉 Payment successful, redirecting to confirmation:', orderId);
+    checkoutCompletedRef.current = true;
     router.push(`/order-confirmation/${orderId}`);
   };
+  
 
   if (authLoading || loading) {
     console.log('⏳ Loading...');
