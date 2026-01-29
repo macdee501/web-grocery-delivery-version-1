@@ -140,11 +140,11 @@ const handleCheckout = () => {
                 </div>
                 <div className="flex justify-between text-gray-600">
                   <span>Delivery Fee</span>
-                  <span>R50.00</span>
+                  <span>R5.00</span>
                 </div>
                 <div className="border-t pt-3 flex justify-between text-xl font-bold text-gray-900">
                   <span>Total</span>
-                  <span>R{(totalPrice() + 50).toFixed(2)}</span>
+                  <span>R{(totalPrice() + 5).toFixed(2)}</span>
                 </div>
               </div>
 
@@ -168,7 +168,7 @@ const handleCheckout = () => {
                 <ul className="space-y-2 text-sm text-gray-600">
                   <li className="flex items-center gap-2">
                     <span className="text-lime-500">✓</span>
-                    Free delivery on orders over R500
+                    Free delivery in Orkney
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="text-lime-500">✓</span>

@@ -173,7 +173,7 @@ export default function CheckoutPage() {
     phone: '',
   });
 
-  const deliveryFee = 1.00;
+  const deliveryFee = 5.00;
   const subtotal = totalPrice();
   const total = subtotal + deliveryFee;
 
