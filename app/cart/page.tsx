@@ -168,7 +168,7 @@ const handleCheckout = () => {
                 <ul className="space-y-2 text-sm text-gray-600">
                   <li className="flex items-center gap-2">
                     <span className="text-lime-500">✓</span>
-                    Free delivery in Orkney
+                    R5.00 delivery in Orkney
                   </li>
                   <li className="flex items-center gap-2">
                     <span className="text-lime-500">✓</span>
