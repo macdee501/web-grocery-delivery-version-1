@@ -1,26 +1,25 @@
-// app/(auth)/login/page.tsx
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuthStore } from '@/store/useAuthStore';
-
-// Small helper to extract redirect param safely
-function useRedirect(defaultRedirect = '/profile') {
-  const searchParams = useSearchParams();
-  return searchParams?.get('redirect') || defaultRedirect;
-}
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [redirect, setRedirect] = useState('/profile');
 
   const { login, isAuthenticated, loading: authLoading } = useAuthStore();
   const router = useRouter();
-  const redirect = useRedirect();
+
+  // Get redirect param client-side only
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setRedirect(params.get('redirect') || '/profile');
+  }, []);
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -36,7 +35,6 @@ export default function LoginPage() {
 
     try {
       await login(email, password);
-      // Ensure state updates before redirect
       setTimeout(() => router.push(redirect), 50);
     } catch (err: any) {
       setError(err.message || 'Login failed. Please check your credentials.');
