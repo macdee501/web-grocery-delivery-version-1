@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
 export interface CartItem {
-  $id: string;
+  id: string;
   name: string;
   price: number;
   image?: string;
@@ -18,7 +18,6 @@ interface CartState {
   updateQuantity: (productId: string, quantity: number) => void;
   clearCart: () => void;
   
-  // Computed
   totalItems: () => number;
   totalPrice: () => number;
 }
@@ -30,12 +29,12 @@ export const useCartStore = create<CartState>()(
 
       addItem: (product) => {
         const items = get().items;
-        const existingItem = items.find(item => item.$id === product.$id);
+        const existingItem = items.find(item => item.id === product.id);
 
         if (existingItem) {
           set({
             items: items.map(item =>
-              item.$id === product.$id
+              item.id === product.id
                 ? { ...item, quantity: item.quantity + 1 }
                 : item
             ),
@@ -46,7 +45,7 @@ export const useCartStore = create<CartState>()(
       },
 
       removeItem: (productId) => {
-        set({ items: get().items.filter(item => item.$id !== productId) });
+        set({ items: get().items.filter(item => item.id !== productId) });
       },
 
       updateQuantity: (productId, quantity) => {
@@ -57,7 +56,7 @@ export const useCartStore = create<CartState>()(
 
         set({
           items: get().items.map(item =>
-            item.$id === productId ? { ...item, quantity } : item
+            item.id === productId ? { ...item, quantity } : item
           ),
         });
       },

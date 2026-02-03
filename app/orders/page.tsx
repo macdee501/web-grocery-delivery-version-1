@@ -48,7 +48,7 @@ export default function OrdersPage() {
           Query.orderDesc('$createdAt')
         ]
       );
-      setOrders(response.documents as Order[]);
+      setOrders(response.documents as unknown as Order[]);
     } catch (error) {
       console.error('Error fetching orders:', error);
     } finally {

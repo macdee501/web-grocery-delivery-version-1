@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { CheckCircle } from 'lucide-react';
@@ -9,6 +8,9 @@ export default function OrderConfirmationPage() {
   const params = useParams();
   const router = useRouter();
   const orderId = params.orderId as string;
+
+  // Take last 8 characters for user-friendly display
+  const displayOrderId = orderId.slice(-8).toUpperCase();
 
   return (
     <div className="container mx-auto px-4 py-12">
@@ -25,7 +27,7 @@ export default function OrderConfirmationPage() {
           </p>
           
           <p className="text-gray-600 mb-8">
-            Order ID: <span className="font-mono font-semibold">{orderId}</span>
+            Order ID: <span className="font-mono font-semibold">{displayOrderId}</span>
           </p>
 
           <div className="bg-lime-50 border border-lime-200 rounded-xl p-6 mb-8">
@@ -48,7 +50,7 @@ export default function OrderConfirmationPage() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href="/profile"
+              href={`/orders/${orderId}`}
               className="bg-lime-400 hover:bg-lime-500 text-gray-900 font-semibold px-8 py-3 rounded-lg transition"
             >
               View Order

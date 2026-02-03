@@ -1,9 +1,16 @@
+// app/(auth)/login/page.tsx
 "use client";
 
-import { useState, useEffect } from 'react';
-import { useAuthStore } from '@/store/useAuthStore';
+import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import { useAuthStore } from '@/store/useAuthStore';
+
+// Small helper to extract redirect param safely
+function useRedirect(defaultRedirect = '/profile') {
+  const searchParams = useSearchParams();
+  return searchParams?.get('redirect') || defaultRedirect;
+}
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -13,16 +20,14 @@ export default function LoginPage() {
 
   const { login, isAuthenticated, loading: authLoading } = useAuthStore();
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const redirect = searchParams.get('redirect') || '/profile';
+  const redirect = useRedirect();
 
-  // If already authenticated, redirect immediately
+  // Redirect if already authenticated
   useEffect(() => {
     if (!authLoading && isAuthenticated) {
-      console.log('Already authenticated, redirecting to:', redirect);
       router.push(redirect);
     }
-  }, [isAuthenticated, authLoading, router, redirect]);
+  }, [isAuthenticated, authLoading, redirect, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,11 +36,8 @@ export default function LoginPage() {
 
     try {
       await login(email, password);
-      console.log('Login successful, redirecting to:', redirect);
-      // Small delay to ensure state is updated
-      setTimeout(() => {
-        router.push(redirect);
-      }, 100);
+      // Ensure state updates before redirect
+      setTimeout(() => router.push(redirect), 50);
     } catch (err: any) {
       setError(err.message || 'Login failed. Please check your credentials.');
     } finally {
@@ -43,7 +45,6 @@ export default function LoginPage() {
     }
   };
 
-  // Show loading while checking auth
   if (authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">

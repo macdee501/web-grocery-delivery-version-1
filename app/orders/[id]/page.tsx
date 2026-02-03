@@ -57,7 +57,7 @@ export default function OrderDetailPage() {
         orderId
       );
       
-      setOrder(response as Order);
+      setOrder(response as unknown as Order);
       
       // Parse items
       if (response.items) {
@@ -146,44 +146,48 @@ export default function OrderDetailPage() {
           </div>
         </div>
 
-        {/* Order Items */}
-        <div className="bg-white rounded-2xl p-6 shadow-md mb-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">Order Items</h2>
-          <div className="space-y-4">
-            {items.length === 0 ? (
-              <p className="text-gray-500">No items found in this order.</p>
-            ) : (
-              items.map((item) => (
-                <div key={item.id} className="flex gap-4 pb-4 border-b last:border-b-0">
-                  {item.image && (
-                    <div className="relative w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
-                      <Image
-                        src={getProductImage(item.image)}
-                        alt={item.name}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                  )}
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-gray-900">{item.name}</h3>
-                    <p className="text-sm text-gray-600 mt-1">
-                      Quantity: {item.quantity}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-semibold text-gray-900">
-                      R {(item.price * item.quantity).toFixed(2)}
-                    </p>
-                    <p className="text-sm text-gray-600">
-                      R {item.price.toFixed(2)} each
-                    </p>
-                  </div>
-                </div>
-              ))
-            )}
+       {/* Order Items */}
+<div className="bg-white rounded-2xl p-6 shadow-md mb-6">
+  <h2 className="text-xl font-semibold text-gray-900 mb-4">Order Items</h2>
+  <div className="space-y-4">
+    {items.length === 0 ? (
+      <p className="text-gray-500">No items found in this order.</p>
+    ) : (
+      items.map((item, index) => (
+        <div
+          key={`${item.id || 'item'}-${index}`} // ✅ Unique key
+          className="flex gap-4 pb-4 border-b last:border-b-0"
+        >
+          {item.image && (
+            <div className="relative w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden bg-gray-100">
+              <Image
+                src={getProductImage(item.image)}
+                alt={item.name}
+                fill
+                className="object-cover"
+              />
+            </div>
+          )}
+          <div className="flex-1">
+            <h3 className="font-semibold text-gray-900">{item.name}</h3>
+            <p className="text-sm text-gray-600 mt-1">
+              Quantity: {item.quantity}
+            </p>
+          </div>
+          <div className="text-right">
+            <p className="font-semibold text-gray-900">
+              R {(item.price * item.quantity).toFixed(2)}
+            </p>
+            <p className="text-sm text-gray-600">
+              R {item.price.toFixed(2)} each
+            </p>
           </div>
         </div>
+      ))
+    )}
+  </div>
+</div>
+
 
         {/* Order Summary */}
         <div className="bg-white rounded-2xl p-6 shadow-md">

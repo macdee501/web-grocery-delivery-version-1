@@ -66,7 +66,7 @@ const handleCheckout = () => {
           <div className="lg:col-span-2 space-y-4">
             {items.map((item) => (
               <div 
-                key={item.$id}
+                key={item.id}
                 className="bg-white rounded-2xl p-6 shadow-md flex gap-6"
               >
                 {/* Product Image */}
@@ -94,7 +94,7 @@ const handleCheckout = () => {
                   {/* Quantity Controls */}
                   <div className="flex items-center gap-3">
                     <button
-                      onClick={() => updateQuantity(item.$id, item.quantity - 1)}
+                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
                       className="w-8 h-8 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-lg transition"
                       disabled={item.quantity <= 1}
                     >
@@ -104,7 +104,7 @@ const handleCheckout = () => {
                       {item.quantity}
                     </span>
                     <button
-                      onClick={() => updateQuantity(item.$id, item.quantity + 1)}
+                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
                       className="w-8 h-8 flex items-center justify-center bg-gray-100 hover:bg-gray-200 rounded-lg transition"
                     >
                       <Plus className="w-4 h-4" />
@@ -115,7 +115,7 @@ const handleCheckout = () => {
                 {/* Price & Remove */}
                 <div className="flex flex-col items-end justify-between">
                   <button
-                    onClick={() => removeItem(item.$id)}
+                    onClick={() => removeItem(item.id)}
                     className="text-red-600 hover:text-red-700 transition"
                   >
                     <Trash2 className="w-5 h-5" />

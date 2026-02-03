@@ -1,8 +1,27 @@
 import OffersCard from "@/components/OffersCard";
 import { getOffers } from "@/lib/getOffers";
 
+interface Offer {
+  $id: string;
+  title: string;
+  image: string;
+  color: string;
+  isActive: boolean;
+  order: number;
+}
+
 export default async function Home() {
-  const offers = await getOffers();
+  const offersData = await getOffers();
+
+  // Map Appwrite DefaultDocument to Offer type
+  const offers: Offer[] = offersData.map((doc) => ({
+    $id: doc.$id,
+    title: doc.title,
+    image: doc.image,
+    color: doc.color,
+    isActive: doc.isActive,
+    order: doc.order,
+  }));
 
   return (
     <div className="container mx-auto p-4 max-w-7xl">
