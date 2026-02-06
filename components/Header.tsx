@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import Link from "next/link";
 import { ShoppingCart, User, LogOut, Menu, X } from "lucide-react";
@@ -6,10 +6,12 @@ import { useCartStore } from "@/store/useCartStore";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import MobileCartDrawer from "./MobileCartDrawer";
 
 export default function Header() {
-  const [cartCount, setCartCount] = useState(0);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
+  const [isCartOpen, setIsCartOpen] = useState(false); // mobile drawer
 
   const totalItems = useCartStore((state) => state.totalItems());
   const { isAuthenticated, user, logout } = useAuthStore();
@@ -34,28 +36,22 @@ export default function Header() {
             <div className="w-10 h-10 bg-gradient-to-br from-lime-400 to-lime-600 rounded-lg flex items-center justify-center">
               <span className="text-2xl">🥑</span>
             </div>
-            <span className="text-2xl font-bold text-gray-900">
-              FreshCart
-            </span>
+            <span className="text-2xl font-bold text-gray-900">FreshCart</span>
           </Link>
 
-          {/* Desktop Nav */}
+          {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
-            <Link href="/" className="font-medium text-gray-700 hover:text-lime-600">
-              Home
-            </Link>
-            <Link href="/shop" className="font-medium text-gray-700 hover:text-lime-600">
-              Shop
-            </Link>
+            <Link href="/" className="font-medium text-gray-700 hover:text-lime-600">Home</Link>
+            <Link href="/shop" className="font-medium text-gray-700 hover:text-lime-600">Shop</Link>
           </nav>
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-4">
-            {/* Cart */}
+            {/* Desktop Cart Link */}
             <Link href="/cart" className="relative p-2 rounded-lg hover:bg-lime-50">
               <ShoppingCart className="w-6 h-6 text-gray-700" />
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-lime-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center animate-pulse">
                   {cartCount}
                 </span>
               )}
@@ -70,7 +66,6 @@ export default function Header() {
                 >
                   <User className="w-6 h-6 text-gray-700" />
                 </Link>
-
                 <button
                   onClick={handleLogout}
                   className="p-2 rounded-lg hover:bg-red-50"
@@ -89,66 +84,42 @@ export default function Header() {
             )}
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setMobileMenuOpen((prev) => !prev)}
-            className="md:hidden p-2 rounded-lg hover:bg-lime-50"
-            aria-label="Toggle menu"
-          >
-            {mobileMenuOpen ? (
-              <X className="w-6 h-6 text-gray-700" />
-            ) : (
-              <Menu className="w-6 h-6 text-gray-700" />
-            )}
-          </button>
+          {/* Mobile: Cart Drawer + Menu */}
+          <div className="flex items-center gap-2 md:hidden">
+            {/* Mobile drawer cart */}
+            <button
+              onClick={() => setIsCartOpen(true)}
+              className="relative p-2 rounded-lg hover:bg-lime-50"
+            >
+              <ShoppingCart className="w-6 h-6 text-gray-700" />
+              {cartCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center animate-pulse">
+                  {cartCount}
+                </span>
+              )}
+            </button>
+
+            {/* Mobile menu toggle */}
+            <button
+              onClick={() => setMobileMenuOpen((prev) => !prev)}
+              className="p-2 rounded-lg hover:bg-lime-50"
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6 text-gray-700" /> : <Menu className="w-6 h-6 text-gray-700" />}
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Mobile Menu */}
-      <div
-        className={`md:hidden overflow-hidden transition-all duration-300 ${
-          mobileMenuOpen ? "max-h-[1000px] border-t" : "max-h-0"
-        }`}
-      >
+      <div className={`md:hidden overflow-hidden transition-all duration-300 ${mobileMenuOpen ? "max-h-[1000px] border-t" : "max-h-0"}`}>
         <div className="px-4 py-3 flex flex-col gap-3 bg-white">
-          {/* Mobile Nav */}
-          <Link
-            href="/"
-            onClick={() => setMobileMenuOpen(false)}
-            className="p-2 rounded-lg hover:bg-lime-50"
-          >
-            Home
-          </Link>
-          <Link
-            href="/shop"
-            onClick={() => setMobileMenuOpen(false)}
-            className="p-2 rounded-lg hover:bg-lime-50"
-          >
-            Shop
-          </Link>
-
-          {/* Cart */}
-          <Link
-            href="/cart"
-            onClick={() => setMobileMenuOpen(false)}
-            className="flex items-center gap-3 p-2 rounded-lg hover:bg-lime-50"
-          >
-            <ShoppingCart className="w-5 h-5" />
-            <span>Cart</span>
-            {cartCount > 0 && (
-              <span className="ml-auto bg-lime-500 text-white text-xs px-2 py-0.5 rounded-full">
-                {cartCount}
-              </span>
-            )}
-          </Link>
+          <Link href="/" onClick={() => setMobileMenuOpen(false)} className="p-2 rounded-lg hover:bg-lime-50">Home</Link>
+          <Link href="/shop" onClick={() => setMobileMenuOpen(false)} className="p-2 rounded-lg hover:bg-lime-50">Shop</Link>
 
           {isAuthenticated ? (
             <>
-              <Link
-                href="/profile"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 p-2 rounded-lg hover:bg-lime-50"
-              >
+              <Link href="/profile" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-3 p-2 rounded-lg hover:bg-lime-50">
                 <User className="w-5 h-5" />
                 <span>Profile</span>
               </Link>
@@ -162,16 +133,13 @@ export default function Header() {
               </button>
             </>
           ) : (
-            <Link
-              href="/login"
-              onClick={() => setMobileMenuOpen(false)}
-              className="p-2 text-center rounded-lg bg-lime-400 font-semibold"
-            >
-              Login
-            </Link>
+            <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="p-2 text-center rounded-lg bg-lime-400 font-semibold">Login</Link>
           )}
         </div>
       </div>
+
+      {/* Mobile Cart Drawer */}
+      <MobileCartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </header>
   );
 }

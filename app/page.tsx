@@ -1,3 +1,4 @@
+import HeroSection from "@/components/HeroSection";
 import OffersCard from "@/components/OffersCard";
 import { getOffers } from "@/lib/getOffers";
 
@@ -24,6 +25,14 @@ export default async function Home() {
   }));
 
   return (
+    <>
+    <HeroSection
+        imageSrc="/images/batchOfVeg.png"
+        title="Fresh Produce Delivered Fast"
+        subtitle="From local farms to your doorstep, enjoy fresh and organic fruits and vegetables every day."
+        ctaText="Start Shopping"
+        ctaLink="/shop"
+      />
     <div className="container mx-auto p-4 max-w-7xl">
       <h1 className="text-3xl font-bold mb-8">Available Offers</h1>
       <div className="flex flex-col gap-6">
@@ -36,5 +45,6 @@ export default async function Home() {
         )}
       </div>
     </div>
+    </>
   );
 }
