@@ -30,12 +30,7 @@ export default function OffersCard({ offer }: OffersCardProps) {
           <p className="text-black/90 text-sm mb-6 leading-relaxed">
             Get 5% of your order when you use the FreshCart App
           </p>
-          <div className="flex items-center gap-4">
-            <button className="bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold px-6 py-2 rounded-full transition-colors">
-              SHOP NOW
-            </button>
-           
-          </div>
+          
         </div>
 
         {/* Image Section - Right Side */}
