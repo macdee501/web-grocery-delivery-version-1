@@ -107,10 +107,27 @@ export default function Header() {
       {/* Mobile Menu */}
       <div
         className={`md:hidden overflow-hidden transition-all duration-300 ${
-          mobileMenuOpen ? "max-h-96 border-t" : "max-h-0"
+          mobileMenuOpen ? "max-h-[1000px] border-t" : "max-h-0"
         }`}
       >
         <div className="px-4 py-3 flex flex-col gap-3 bg-white">
+          {/* Mobile Nav */}
+          <Link
+            href="/"
+            onClick={() => setMobileMenuOpen(false)}
+            className="p-2 rounded-lg hover:bg-lime-50"
+          >
+            Home
+          </Link>
+          <Link
+            href="/shop"
+            onClick={() => setMobileMenuOpen(false)}
+            className="p-2 rounded-lg hover:bg-lime-50"
+          >
+            Shop
+          </Link>
+
+          {/* Cart */}
           <Link
             href="/cart"
             onClick={() => setMobileMenuOpen(false)}
