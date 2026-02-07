@@ -3,38 +3,43 @@ import { useState, useEffect } from "react";
 import { getProducts } from "@/lib/getProducts";
 import { getCategories } from "@/lib/getCategories";
 import ProductGrid from "./ProductGrid";
+import { Product } from "@/types/product"; // ✅ use shared Product type
 
-// Define the shape of your data
+// Category type
 type Category = {
-  id: string; // or number if your id is numeric
+  id: string;
   name: string;
 };
 
-type Product = {
-  id: string; // adjust fields to match your Product type
-  name: string;
-  price: number;
-  categoryId: string;
-  // add other product fields here
-};
+// Extend Product with optional categoryId for UI filtering
+type ProductWithCategory = Product & { categoryId?: string };
 
 export default function ProductFilter() {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<ProductWithCategory[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
+  // Fetch categories
   useEffect(() => {
     async function fetchCategories() {
-      const cats: Category[] = await getCategories(); // type assertion
+      const cats: Category[] = await getCategories();
       setCategories(cats);
     }
     fetchCategories();
   }, []);
 
+  // Fetch products
   useEffect(() => {
     async function fetchProducts() {
-      const prods: Product[] = await getProducts(selectedCategory || undefined); // type assertion
-      setProducts(prods);
+      const prods: Product[] = await getProducts(selectedCategory || undefined);
+
+      // Map products to include categoryId for filtering (optional)
+      const prodsWithCategory: ProductWithCategory[] = prods.map(p => ({
+        ...p,
+        categoryId: selectedCategory || "all",
+      }));
+
+      setProducts(prodsWithCategory);
     }
     fetchProducts();
   }, [selectedCategory]);
