@@ -4,14 +4,28 @@ import { getProducts } from "@/lib/getProducts";
 import { getCategories } from "@/lib/getCategories";
 import ProductGrid from "./ProductGrid";
 
+// Define the shape of your data
+type Category = {
+  id: string; // or number if your id is numeric
+  name: string;
+};
+
+type Product = {
+  id: string; // adjust fields to match your Product type
+  name: string;
+  price: number;
+  categoryId: string;
+  // add other product fields here
+};
+
 export default function ProductFilter() {
-  const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchCategories() {
-      const cats = await getCategories();
+      const cats: Category[] = await getCategories(); // type assertion
       setCategories(cats);
     }
     fetchCategories();
@@ -19,7 +33,7 @@ export default function ProductFilter() {
 
   useEffect(() => {
     async function fetchProducts() {
-      const prods = await getProducts(selectedCategory || undefined);
+      const prods: Product[] = await getProducts(selectedCategory || undefined); // type assertion
       setProducts(prods);
     }
     fetchProducts();
