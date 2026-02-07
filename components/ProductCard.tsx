@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { Product } from '@/types/product';
 import { getProductImage } from "@/lib/getProductImage";
+import { useRouter } from 'next/navigation';
 
 type Props = {
   product: Product;
@@ -11,11 +12,14 @@ type Props = {
 };
 
 export default function ProductCard({ product, onAddToCart, onOpenDetails }: Props) {
+  
+  const router = useRouter();
+  
   return (
     <div className="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-shadow">
       <div
         className="relative h-48 mb-4 cursor-pointer"
-        onClick={() => onOpenDetails(product)}
+        onClick={() => router.push(`/shop/${product.id}`)}
       >
         <Image
           src={getProductImage(product.image || '')}

@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { useCartStore } from "@/store/useCartStore";
 import { useAuthStore } from "@/store/useAuthStore";
@@ -9,46 +9,45 @@ import { Trash2, Plus, Minus, X } from "lucide-react";
 import { getProductImage } from "@/lib/getProductImage";
 import { useEffect } from "react";
 
+// --- New client-side component for cart count ---
+function CartCount() {
+  const totalItems = useCartStore((state) => state.totalItems());
+  return <>{totalItems}</>;
+}
+
 interface MobileCartDrawerProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
 export default function MobileCartDrawer({ isOpen, onClose }: MobileCartDrawerProps) {
-  const { items, updateQuantity, removeItem, totalItems, totalPrice } = useCartStore();
+  const { items, updateQuantity, removeItem, totalPrice } = useCartStore();
   const { isAuthenticated } = useAuthStore();
   const router = useRouter();
 
   const handleCheckout = () => {
     if (!isAuthenticated) {
-      router.push('/login?redirect=/checkout');
+      router.push("/login?redirect=/checkout");
       onClose();
       return;
     }
-    router.push('/checkout');
+    router.push("/checkout");
     onClose();
   };
 
-
-useEffect(() => {
-  if (isOpen) {
-    document.body.style.overflow = "hidden"; // stop scrolling
-  } else {
-    document.body.style.overflow = "auto"; // restore
-  }
-}, [isOpen]);
-
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "auto";
+  }, [isOpen]);
 
   return (
     <>
       {/* Overlay */}
-<div
-  className={`fixed inset-0 bg-black transition-opacity z-40 ${
-    isOpen ? "opacity-50 pointer-events-auto" : "opacity-0 pointer-events-none"
-  }`}
-  onClick={onClose}
-/>
-
+      <div
+        className={`fixed inset-0 bg-black transition-opacity z-40 ${
+          isOpen ? "opacity-50 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
+        onClick={onClose}
+      />
 
       {/* Drawer */}
       <div
@@ -58,11 +57,9 @@ useEffect(() => {
       >
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b">
-        <h2 className="text-xl font-bold">
-  Your Cart (
-    {typeof window !== "undefined" ? totalItems() : 0}
-  )
-</h2>
+          <h2 className="text-xl font-bold" suppressHydrationWarning>
+            Your Cart (<CartCount />)
+          </h2>
 
           <button onClick={onClose} className="p-2 rounded hover:bg-gray-100">
             <X className="w-5 h-5" />
@@ -88,7 +85,7 @@ useEffect(() => {
                 <div key={item.id} className="flex gap-4 items-center border rounded-lg p-3">
                   <div className="relative w-20 h-20 flex-shrink-0">
                     <Image
-                      src={getProductImage(item.image || '')}
+                      src={getProductImage(item.image || "")}
                       alt={item.name}
                       fill
                       sizes="80px"
