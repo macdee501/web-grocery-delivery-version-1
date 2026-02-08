@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { account } from '@/lib/appwrite';
+import { account, storage } from '@/lib/appwrite';
 import { ID } from 'appwrite';
 import type { Models } from 'appwrite';
 
@@ -14,6 +14,11 @@ interface AuthState {
   register: (email: string, password: string, name?: string) => Promise<void>;
   logout: () => Promise<void>;
   checkAuth: () => Promise<void>;
+
+  updateProfile: (name: string) => Promise<void>;
+  updatePassword: (oldPassword: string, newPassword: string) => Promise<void>;
+  updateAvatar: (file: File) => Promise<void>;
+  
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -95,6 +100,55 @@ export const useAuthStore = create<AuthState>()(
           set({ user: null, isAuthenticated: false });
         }
       },
+      updateProfile: async (name: string) => {
+        try {
+          await account.updateName(name);
+          const user = await account.get();
+          set({ user });
+        } catch (error) {
+          console.error('❌ Update profile failed', error);
+          throw error;
+        }
+      },
+      
+      updatePassword: async (oldPassword, newPassword) => {
+        try {
+          await account.updatePassword(newPassword, oldPassword);
+          console.log('✅ Password updated');
+        } catch (error) {
+          console.error('❌ Password update failed', error);
+          throw error;
+        }
+      },
+      
+      updateAvatar: async (file: File) => {
+        try {
+          const uploaded = await storage.createFile(
+            process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID!,
+            ID.unique(),
+            file,
+            [
+              `read("user:${(await account.get()).$id}")`,
+              `update("user:${(await account.get()).$id}")`,
+              `delete("user:${(await account.get()).$id}")`,
+            ]
+          );
+      
+          await account.updatePrefs({
+            avatar: uploaded.$id,
+          });
+      
+          const user = await account.get();
+          set({ user });
+      
+          console.log('✅ Avatar updated');
+        } catch (error) {
+          console.error('❌ Avatar upload failed', error);
+          throw error;
+        }
+      },
+      
+      
     }),
     {
       name: 'auth-storage',

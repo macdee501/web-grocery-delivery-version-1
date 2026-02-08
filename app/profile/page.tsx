@@ -4,10 +4,21 @@ import { useAuthStore } from '@/store/useAuthStore';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import Link from 'next/link';
+import { storage } from '@/lib/appwrite';
+
 
 export default function ProfilePage() {
   const { user, isAuthenticated, loading, logout } = useAuthStore();
   const router = useRouter();
+  const BUCKET_ID = process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID!;
+
+  const avatarId = user.prefs?.avatar as string | undefined;
+
+const avatarUrl = avatarId
+  ? storage.getFileView(BUCKET_ID, avatarId)
+  : null;
+
+
 
   useEffect(() => {
     console.log('Profile - Auth State:', { isAuthenticated, loading, hasUser: !!user });
@@ -46,9 +57,18 @@ export default function ProfilePage() {
         {/* Profile Header */}
         <div className="bg-white rounded-2xl p-8 shadow-md mb-6">
           <div className="flex items-center gap-6 mb-8">
-            <div className="w-20 h-20 bg-gradient-to-br from-lime-400 to-lime-600 rounded-full flex items-center justify-center">
-              <span className="text-4xl">👤</span>
-            </div>
+          <div className="w-20 h-20 rounded-full overflow-hidden bg-gradient-to-br from-lime-400 to-lime-600 flex items-center justify-center">
+  {avatarUrl ? (
+    <img
+      src={avatarUrl.toString()}
+      alt="Avatar"
+      className="w-full h-full object-cover"
+    />
+  ) : (
+    <span className="text-4xl">👤</span>
+  )}
+</div>
+
             <div>
               <h1 className="text-3xl font-bold text-gray-900">
                 {user.name || 'User'}
@@ -112,6 +132,23 @@ export default function ProfilePage() {
               </div>
               <span className="text-gray-400 group-hover:text-lime-600 transition">→</span>
             </Link>
+
+            <Link
+  href="/profile/edit"
+  className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:border-lime-400 hover:bg-lime-50 transition group"
+>
+  <div className="flex items-center gap-4">
+    <div className="w-12 h-12 bg-lime-100 rounded-lg flex items-center justify-center group-hover:bg-lime-200 transition">
+      <span className="text-2xl">✏️</span>
+    </div>
+    <div>
+      <h3 className="font-semibold text-gray-900">Edit Profile</h3>
+      <p className="text-sm text-gray-600">Update your name or password</p>
+    </div>
+  </div>
+  <span className="text-gray-400 group-hover:text-lime-600 transition">→</span>
+</Link>
+
 
            
 
