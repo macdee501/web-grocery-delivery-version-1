@@ -6,13 +6,17 @@ import { useEffect } from 'react';
 import Link from 'next/link';
 import { storage } from '@/lib/appwrite';
 
+type UserPrefs = {
+  avatar?: string;
+};
 
 export default function ProfilePage() {
   const { user, isAuthenticated, loading, logout } = useAuthStore();
   const router = useRouter();
   const BUCKET_ID = process.env.NEXT_PUBLIC_APPWRITE_BUCKET_ID!;
 
-  const avatarId = user.prefs?.avatar as string | undefined;
+  const prefs = user?.prefs as UserPrefs | undefined;
+  const avatarId = prefs?.avatar;
 
 const avatarUrl = avatarId
   ? storage.getFileView(BUCKET_ID, avatarId)
